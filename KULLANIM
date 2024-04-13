@@ -1,0 +1,12 @@
+Sıra bozulmadan yapılması gereken işlemler şu şekilde:
+
+    Arduino UNO’yu bilgisayara bağlayın.
+    Arduino’yu çalıştırın ve seri porttan veri akışının başladığından emin olun. Bazı sayılar siz jiroskop ile hareket ettikçe değişmelidir.
+    Windows aplikasyonunu çalıştırın.
+    Port seçimini yapın.
+    Butona basın ve çalışmadığını gözlemleyin. (çünkü seri port ekranını çalışır durumda bıraktınız ve bu gerekli.)
+    Arduino’ya dönün ve seri port ekranını kapatın.
+    Aplikasyona geri dönün ve butona tekar basın.
+    Logonun yer değiştirdiğini gözlemleyin.
+
+Daetaylar için: https://www.aydinoloji.com/jiroskop-ile-windows-aplikasyonu-kontrolu/
