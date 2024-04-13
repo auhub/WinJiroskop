@@ -1,0 +1,63 @@
+Imports System.IO.Ports
+Public Class Form1
+    Dim seriPort As SerialPort
+Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load 'giriş
+    'Desinger sekmesine gidin ve bir adet Timer, bir adet ComboBox, bir adet Label, bir adet Buton ve Bir adet PictureBox ekleyin. Adlarını değiştirmedim, siz değiştirebilirsiniz.
+    'Timer1'i 100 integer olarak aktif biçimde başlatmalısınız.
+    'COM portlarından hangilerinin kullanımda olduğunu saptıyorum ve ComboBox içine ekliyorum.
+    Dim acikPortlar As String() = SerialPort.GetPortNames()
+    comboBox1.Items.AddRange(acikPortlar)
+
+    'Açık portlar olması durumunda ilkini seçiyorum. Bazen boş görünebiliyor ve kullanıcı boş olduğunda seçim yapacak bir port olmadığını düşünebiliyor.
+    If comboBox1.Items.Count > 0 Then
+        comboBox1.SelectedIndex = 0
+    End If
+
+    'Seri port nesnesini oluşturuyoru.
+    seriPort = New SerialPort()
+End Sub
+Private Sub buttonConnect_Click(sender As Object, e As EventArgs) Handles buttonConnect.Click
+    'Seçili COM portu tanımlanıyor.
+    Dim seciliPort As String = comboBox1.SelectedItem.ToString()
+
+    'Seçilen COM portu kullanarak bağlantı kurma veya diğer işlemleri burada yapabilirsiniz
+    seriPort.PortName = seciliPort 'bu değer COM1, COM3, COM6 gibi görünecektir. Arduino hangisine bağlıysa o seçilir.
+    seriPort.BaudRate = 9600 'Serial.begin(9600); olarak girdiğim kodu burada aynı şekilde çağırmalıyım.
+
+    Try 'Try kullandım çünkü COM portuna bğalantı yapmak çok fazla hataya ve kitlenmeye neden olabiliyor. Bu yöntemle hataya rağmen devam edebilirsiniz.
+        seriPort.Open() 'Seri portu açıyorum.
+        'istağa bağlı işlem ekleyebilirsiniz.
+    Catch ex As Exception
+        'istağa bağlı işlem ekleyebilirsiniz. aksi yöndeki durumlar için.
+    End Try
+End Sub
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+
+        Try 'Seri port ile çalışıyorum. Try daha iyi bir seçim. Saniyede 10 defa işlem yapılacak.
+            'Seri port verilerini naklen okuyorum.
+            Dim dataTopla As String = seriPort.ReadLine() 'ReadLine ile Arduino seri port ekranındaki satırları okuyorum ve dataTopla olarak isimlendiriyorum.
+
+            'Aldığım datayı Label1'e String olarak yazdırıyorum ve vbCrLf ile her yazışta temizliyorum. satir olarak tanımladım.
+            Dim satir As String = dataTopla & vbCrLf
+            Label1.Text = satir
+
+        Catch ex As Exception
+            'Hata durumunda işlem. (Bazı bilgisayarlarda gerekli olabilir)
+        End Try
+
+        'PictureBox oluşturmuştum. Bunun içine logo ekledim. Konumunu belirlerken x ve y birlikte olmak zorunda.
+        Dim yeniYer As New Point(400, 50)
+
+        'PictureBox1 yeni konumu.
+        PictureBox1.Location = yeniYer
+
+        'Yalnızca x konumunu değiştirmem yeterli.
+        Dim yX As Integer
+        If Integer.TryParse(Label1.Text, yX) Then
+
+            'PictureBox1 yeni konumunun sadece x konumu değişecek şekilde ayarlanması.
+            PictureBox1.Location = New Point(yX, PictureBox1.Location.Y)
+        End If
+
+    End Sub
+End Class
